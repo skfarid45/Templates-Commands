@@ -30,7 +30,7 @@ spec:
     spec:
       containers:
       - name: nginx
-        image: image: nginx:latest
+        image: nginx:latest
         ports:
         - containerPort: 80
           name: web
