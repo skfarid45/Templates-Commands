@@ -1,0 +1,121 @@
+---
+- name: Install Java 17 and Tomcat 10 on Amazon Linux 2023
+  hosts: webservers
+  become: yes
+
+  vars:
+    tomcat_version: 10.1.49
+
+  tasks:
+    - name: Install Java 17 (Amazon Corretto)
+      dnf:
+        name: java-17-amazon-corretto
+        state: present
+
+    - name: Create Tomcat group
+      group:
+        name: tomcat
+
+    - name: Create Tomcat user
+      user:
+        name: tomcat
+        group: tomcat
+        home: /opt/tomcat
+        create_home: yes
+        shell: /bin/false
+
+    - name: Download Apache Tomcat
+      get_url:
+        url: "https://dlcdn.apache.org/tomcat/tomcat-10/v{{ tomcat_version }}/bin/apache-tomcat-{{ tomcat_version }}.tar.gz"
+        dest: /tmp/apache-tomcat.tar.gz
+
+    - name: Create Tomcat directory
+      file:
+        path: /opt/tomcat
+        state: directory
+
+    - name: Extract Tomcat files
+      unarchive:
+        src: /tmp/apache-tomcat.tar.gz
+        dest: /opt/tomcat
+        remote_src: yes
+
+    - name: Rename Tomcat folder
+      command: mv /opt/tomcat/apache-tomcat-{{ tomcat_version }} /opt/tomcat/latest
+      args:
+        removes: /opt/tomcat/apache-tomcat-{{ tomcat_version }}
+
+    - name: Set correct permissions for Tomcat directory
+      file:
+        path: /opt/tomcat
+        state: directory
+        recurse: yes
+        owner: tomcat
+        group: tomcat
+
+    - name: Make Tomcat scripts executable
+      file:
+        path: /opt/tomcat/latest/bin
+        mode: "0755"
+        recurse: yes
+
+    - name: Create systemd service for Tomcat
+      copy:
+        dest: /etc/systemd/system/tomcat.service
+        content: |
+          [Unit]
+          Description=Apache Tomcat Web Application Container
+          After=network.target
+
+          [Service]
+          Type=forking
+
+          User=tomcat
+          Group=tomcat
+          Environment="JAVA_HOME=/usr/lib/jvm/jre-17"
+          Environment="CATALINA_HOME=/opt/tomcat/latest"
+          Environment="CATALINA_BASE=/opt/tomcat/latest"
+          ExecStart=/opt/tomcat/latest/bin/startup.sh
+          ExecStop=/opt/tomcat/latest/bin/shutdown.sh
+          Restart=on-failure
+
+          [Install]
+          WantedBy=multi-user.target
+
+    - name: Reload systemd daemon
+      systemd:
+        daemon_reload: yes
+
+    - name: Start Tomcat
+      systemd:
+        name: tomcat
+        state: started
+        enabled: yes
+
+    # ------------------ TOMCAT MANAGER CONFIG ------------------
+
+    - name: Add Tomcat Manager user
+      blockinfile:
+        path: /opt/tomcat/latest/conf/tomcat-users.xml
+        insertafter: "</tomcat-users>"
+        content: |
+          <role rolename="manager-gui"/>
+          <role rolename="manager-script"/>
+          <user username="tomcat" password="tomcat" roles="manager-gui,manager-script"/>
+
+    - name: Allow remote access to Manager App
+      replace:
+        path: /opt/tomcat/latest/webapps/manager/META-INF/context.xml
+        regexp: '(<Valve.*RemoteAddrValve.*>)'
+        replace: '<!-- \1 -->'
+
+    - name: Allow remote access to Host Manager App
+      replace:
+        path: /opt/tomcat/latest/webapps/host-manager/META-INF/context.xml
+        regexp: '(<Valve.*RemoteAddrValve.*>)'
+        replace: '<!-- \1 -->'
+
+    - name: Restart Tomcat after configuration changes
+      systemd:
+        name: tomcat
+        state: restarted

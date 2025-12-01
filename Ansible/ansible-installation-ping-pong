@@ -1,0 +1,109 @@
+install ansible core 
+# sudo dnf install -y ansible-core
+
+ STEP 1 — CREATE ANSIBLE INVENTORY FILE
+ On Ansible Control Machine (ACM / Master)
+
+Open the Ansible inventory file:
+
+sudo vim /etc/ansible/hosts
+
+
+If the file does NOT exist (Amazon Linux 2023), then create it:
+
+sudo mkdir -p /etc/ansible
+sudo vim /etc/ansible/hosts
+
+✔ Scroll down and add:
+[webservers]
+172.31.39.169
+
+
+(Replace 172.31.39.169 with your Host/Slave’s private IP.)
+
+Save & Exit:
+
+:wq!
+
+✅ STEP 2 — OPEN SSH CONNECTION SETUP
+✔ Switch to ec2-user (very important)
+sudo su - ec2-user
+
+✅ STEP 3 — Generate SSH Key Pair
+ssh-keygen
+
+
+Press Enter → Enter → Enter
+(Default location: ~/.ssh/id_rsa)
+
+Your key pair is created.
+
+✅ STEP 4 — COPY PUBLIC KEY TO HOST/SLAVE
+
+Use the command:
+
+ssh-copy-id ec2-user@<PRIVATE-IP-HOST>
+
+
+Example for your IP:
+
+ssh-copy-id ec2-user@172.31.39.169
+
+✔ It will ask:
+Are you sure you want to continue connecting (yes/no)?
+
+
+Type:
+
+yes
+
+
+If password is required, enter the host machine password (only if no key yet).
+
+This installs your public key into:
+
+~/.ssh/authorized_keys
+
+✅ STEP 5 — TEST SSH CONNECTION FROM ACM → HOST
+
+After ssh-copy-id prints a message, it also shows the command to log in.
+
+Run:
+
+ssh ec2-user@172.31.39.169
+
+
+If login works automatically WITHOUT password, SSH setup is successful.
+
+To go back to the Control Node:
+exit
+
+🎉 Now your ACM can run Ansible commands on the host
+
+Test:
+
+ansible all -m ping
+
+
+OR only webservers:
+
+ansible webservers -m ping
+
+
+You should get:
+
+172.31.39.169 | SUCCESS => { ... }
+
+⭐ Summary (Copy-Paste Version)
+sudo su - ec2-user
+ssh-keygen    (ENTER, ENTER, ENTER)
+ssh-copy-id ec2-user@<private-ip-host>
+
+sudo vim /etc/ansible/hosts
+[webservers]
+<private-ip-host>
+:wq!
+
+ansible webservers -m ping
+
+

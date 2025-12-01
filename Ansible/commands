@@ -1,0 +1,30 @@
+# TO change host terminal from master through ssh
+
+ssh -i /home/ec2-user/.ssh/farid.pem ec2-user@privateIP 
+
+
+
+# Install java tomcat in multiple servers with single command
+
+ansible-playbook ansible/install_java_tomcat.yml -i ansible/inventory --private-key=/home/ec2-user/.ssh/farid.pem 
+
+# Without ssh
+ansible-playbook ansible/install_java_tomcat.yml -i ansible/inventory --become
+
+
+
+
+
+| Purpose                                 | Command                                                                       |
+| --------------------------------------- | ----------------------------------------------------------------------------- |
+| Check Ansible version                   | `ansible --version`                                                           |
+| Ping all servers in inventory           | `ansible all -m ping -i inventory`                                            |
+| Ping a specific group                   | `ansible webservers -m ping -i inventory`                                     |
+| Run a Shell command on host(s)          | `ansible webservers -a "uptime" -i inventory`                                 |
+| Run a module (example: yum/dnf install) | `ansible webservers -m dnf -a "name=git state=present" -i inventory --become` |
+| Copy a file to remote server            | `ansible webservers -m copy -a "src=test.txt dest=/tmp/" -i inventory`        |
+| Run playbook dry-run (check only)       | `ansible-playbook deploy.yml -i inventory --check`                            |
+| Run a playbook with sudo                | `ansible-playbook deploy.yml -i inventory --become`                           |
+| Run a playbook with specific user       | `ansible-playbook deploy.yml -u ec2-user -i inventory`                        |
+| Run a playbook on specific tag          | `ansible-playbook deploy.yml -i inventory --tags "deploy"`                    |
+

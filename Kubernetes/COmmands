@@ -1,0 +1,59 @@
+#Single line pod creation
+kubectl run pod_name --iamge nginx
+
+
+#Describe resources
+kubectl describe pod podname
+kubectl get pod podname --o wide
+
+
+#Scale up or down replicas
+kubectl scale replicaset rsname --replicas=4
+
+
+#To change working namespace
+kubectl config set-context --current --namespace=default
+
+
+#List resources
+kubectl get pods
+kubectl get pods -o wide
+kubectl get svc
+kubectl get deployments
+kubectl get nodes
+kubectl get namespaces
+kubectl get configmaps
+kubectl get secrets
+kubectl get all
+
+
+#Create manifest files
+kubectl create deployment nginx --image=nginx
+kubectl create -f filename.yaml
+kubectl apply -f filename.yaml
+
+
+#Delete resources
+kubectl delete pod <pod-name>
+kubectl delete deployment <deployment-name>
+kubectl delete svc <service-name>
+kubectl delete -f filename.yaml
+kubectl delete all --all
+
+
+#Namespace Management
+kubectl get namespaces
+kubectl create namespace dev
+kubectl delete namespace dev
+kubectl config set-context --current --namespace=dev
+
+
+#Files and Config
+kubectl create configmap my-config --from-file=config.txt
+kubectl get configmaps
+kubectl describe configmap my-config
+
+kubectl create secret generic my-secret --from-literal=password=12345
+kubectl get secrets
+kubectl describe secret my-secret
+

@@ -1,5 +1,4 @@
-# Terraform-K8S-Ansible_Templates-Notes
-Templates &amp; Notes for Terraform , K8S &amp; Ansible 
+ 
 
 #Execution commands for the tf template
 #first command
