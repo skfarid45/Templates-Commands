@@ -1,0 +1,21 @@
+CloudWatch 
+===========
+
+1) Create a SNS topic
+2) Create an alarm in cloud watch select any one instance
+search CPUUtilization
+ 5mins - 80% & 30% alarm  
+3)CPUUtilization - ec2 , LB
+  memory Utilization ( 80% normal , 90% Critical )
+  Network
+  HTTP_4XX
+  HTTP_5XX
+
+S3 (Simple Storage Service )
+==============
+S3 & IAM is Global level 
+Bucket is region level
+1) Create bucket with unique name and create a object 
+Versioning - It will be deleted as a marker--it is bucket level
+--Click on bucket object select properties-- Bucket versioning click edit and enable then save --for backup
+

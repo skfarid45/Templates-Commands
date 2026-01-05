@@ -1,0 +1,9 @@
+Regions & Availability zones 
+regions - 34
+availability zones - 108
+
+Regions - a country or a geographical area
+availability zones - each region is divided into multiple availability zones , an AZ is like a data centre inside  a region
+
+Security Group - instance level - regions level 
+NACL - Network Access Control List - subnet level - availability zones

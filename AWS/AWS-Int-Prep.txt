@@ -1,0 +1,174 @@
+1) AWS IAM (Identity & Access Management)
+
+Purpose: Securely manage users, access, and permissions in AWS.
+
+Key Concepts
+Feature	    Meaning
+Users	    Individual identities for humans/applications
+Groups	    Collection of users with similar permissions
+Roles	    Temporary access, mainly for services (EC2 -> S3)
+Policies	Permissions in JSON using Allow / Deny
+MFA	        Extra layer of security
+Policy Types
+
+AWS-managed policies
+
+Customer-managed policies
+
+Inline policies (attached to one identity only)
+
+Interview Questions
+
+✔ What is the difference between a role and a user?
+✔ What is the default access when no policy attached? (Deny)
+✔ What’s the IAM best practice?
+— Least privilege, enable MFA, avoid root account.
+
+🪣 2️⃣ Amazon S3 (Simple Storage Service)
+
+Purpose: Object storage for unlimited data. 99.999999999% durability.
+
+Key Concepts
+Feature	Explanation
+Bucket	Container for objects
+Object	File stored in S3
+Versioning	Prevent accidental delete
+Storage Classes	Cost optimization
+Lifecycle Rules	Auto tiering / delete policy
+Encryption	SSE-S3, SSE-KMS
+Block Public Access	Stop accidental exposure
+Storage Classes Examples
+
+S3 Standard (frequently accessed)
+
+S3 IA (Infrequent Access)
+
+Glacier / Glacier Deep Archive (cheapest long-term)
+
+Intelligent-Tiering (auto optimize)
+
+Data Consistency
+
+Strong Read-after-Write for all operations now
+
+Interview Questions
+
+✔ Difference between S3 vs EBS vs EFS
+✔ What is S3 consistency model?
+✔ What is S3 durability vs availability?
+
+📊 3️⃣ Amazon CloudWatch (CW)
+
+Purpose: Monitoring, logs, metrics, alarms, dashboards.
+
+Key Components
+Component	Use
+Metrics	CPU, Network, Disk stats
+Logs	Application logs
+Alarms	Trigger actions when threshold breached
+Events	Automation / notifications (EventBridge)
+Dashboards	Visualization
+Interview Questions
+
+✔ CloudWatch vs CloudTrail?
+
+CloudWatch → Performance Monitoring
+
+CloudTrail → API Logging & Security auditing
+
+✔ Default EC2 monitoring?
+
+5-minute metrics (Basic), 1-minute (Detailed)
+
+⚖️ 4️⃣ Elastic Load Balancer (LB)
+
+Purpose: Distribute traffic across multiple EC2 instances.
+
+Types of Load Balancers
+Type	Best For	Target
+ALB (Layer 7)	HTTP/HTTPS	Microservices, path & host routing
+NLB (Layer 4)	TCP/UDP	High performance, static IP
+CLB (Legacy)	Basic use cases	
+Key Concepts
+
+Target Groups
+
+Health Checks
+
+Sticky Sessions
+
+SSL Termination at ALB
+
+Interview Questions
+
+✔ ALB vs NLB difference?
+✔ What is Cross-Zone Load Balancing?
+
+🔁 5️⃣ Auto Scaling & ASG (Auto Scaling Group)
+
+Purpose: Automatically add/remove EC2 instances based on demand.
+
+Components
+Term	Meaning
+Launch Template	Blueprint for EC2 launch
+ASG	Group that scales instances
+Scaling Policies	Rules to scale up/down
+Health Checks	Replace unhealthy instances
+Types of Scaling
+
+Dynamic Scaling → CPU > 70%
+
+Scheduled Scaling → Peak hours rule
+
+Predictive Scaling → Machine learning based
+
+Interview Questions
+
+✔ What triggers Auto Scaling?
+✔ How ASG ensures High Availability?
+
+📢 6️⃣ SNS (Simple Notification Service)
+
+Purpose: Pub/Sub messaging to notify multiple subscribers.
+
+Billing Model
+
+Pay per publish & delivery attempts
+
+Common Protocols
+Protocol	Example
+Email	Alerts
+SMS	Notifications
+HTTP/HTTPS	Webhooks
+SQS	Distributed systems
+Use Case
+
+Send alert → SNS → send to SMS + Email + Lambda
+
+Interview Questions
+
+✔ Difference between SNS vs SQS?
+✔ What happens if subscriber fails to process message?
+
+⚡ Real-World AWS Architecture Connection
+
+Classic 3-tier setup:
+
+Users → ALB → ASG of EC2 (App Layer) → DB
+            ↑ CloudWatch monitors CPU
+            │
+            └ SNS sends alerts on scaling
+
+
+Data storage: S3
+Access Control: IAM
+
+🧠 Quick Interview Rapid Fire
+Question	Answer
+S3 durability	11 nines (99.999999999%)
+IAM default permission	Explicit Deny
+CloudWatch default EC2 interval	5 minutes
+ALB Layer	7
+NLB Layer	4
+Autoscaling main benefit	HA + Cost optimization
+SNS uses	Pub/Sub alerts

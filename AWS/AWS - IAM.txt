@@ -1,0 +1,40 @@
+AWS - IAM 
+=========
+Identity Access Management - Admin Team
+
+Farid1 - Credentials 
+username & password , roles , groups , policies
+
+iam user - Change Password 
+aws acc id 
+
+users
+tayyu - S3 Access pass - admin@123
+takhu - EC2 Access pass - admin@456
+Groups of 20 Members
+5 users - S3
+5 users - EC2
+5 users - RDS
+5 users - others
+
+Access key
+Secret key
+
+CLI 
+aws configure
+Access key & Secret key
+region us-east-1
+json
+
+create user commands from google
+create user,groups,delete from cli
+
+
+
+
+
+
+
+
+
+

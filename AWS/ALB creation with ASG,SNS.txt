@@ -1,0 +1,50 @@
+Step 1: Create Load Balancer ( i am creating Application load balancer )
+Step 2: Create Launch configuration ( Mention in RAM , CPU , PORT , HDD , OS -like config information for create the instance )
+Step 3: Create Auto Scaling Groups. ( define limitations like min & max , if you not set this billing getting more you need to answer for client )
+Step 4: Create topic in SNS ( Simple Notification Service - getting e-mail notifications)
+Step 5: Create alarm in CloudWatch ( about server performance we should create alarm )
+Step 6: Add policy in Auto Scaling ( we have policies one is increasing policy (ec2 machine) decrease policy (remove automatically))
+
+
+
+Step 1: Application Load Balancer 
+====================
+1) Create a VPC 
+2) Create Internet Gateway - Attach it to VPC created earlier
+3) Create 2 Subnets on same VPC with two different Availability Zones 
+     i) IPv4 12.0.1.0/24
+     ii) IPv4 12.0.3.0/24
+4) Create Route Table same VPC
+     -- Go to subnet assosiations -- Then Edit subnet associations -- Select two subnets created earlier 
+     -- Go to Route -- Edit route -- add route 0.0.0.0 -- select internet gateway then save
+5) Create two EC2 one in each subnet both instance with same VPC 
+     -- Edit network settings -- add HTTP port 80
+     -- ADvance settings -- user data add this script i will save the script in different file
+6) Create Target Group same VPC 
+     -- Select both instance running and include as target below -- Then create Target Group
+7) Create Application Load Balancer
+     -- Same VPC -- Subnets both -- create security group inbound rule HTTP 
+     i)Listeners & Routing add Target Group Created earlier 
+
+
+SNS ( Simple Notification Services ) :
+======================
+
+1) Create SNS topic then create Subscibtion and approve request in the given email
+
+Create Launch configuration:
+======================
+1) It is now exchanged as Launch Templates
+2) Create with ec2 same subnet and security group
+
+Create Auto Scaling Groups:
+======================
+
+1) Create from launch template not from directly ASG
+
+
+
+
+
+
+
