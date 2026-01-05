@@ -1,0 +1,106 @@
+sudo dnf update -y
+
+Java Installation
+==================
+sudo dnf install java-21-amazon-corretto -y
+java --version
+
+sudo alternatives --config java    # Copy java Path 
+
+Set Environment Variables
+========================
+sudo vim /etc/profile
+
+Add This :
+
+export JAVA_HOME=/usr/lib/jvm/java-21-amazon-corretto
+export PATH=$PATH:$JAVA_HOME/bin
+
+source /etc/profile
+echo $JAVA_HOME
+
+
+
+Maven Installation
+===================
+sudo dnf install maven -y
+mvn -version
+
+Or Download latest version
+=======================
+In Google copy tar file of latest mvn version  Binary Version Link Only
+
+cd /opt
+sudo wget url
+ls
+sudo tar -xvzf tarfile
+mv change name
+
+Add Permissions 
+sudo chown -R ec2-user:ec2-user /opt/apache-maven
+
+sudo vim /etc/profile
+
+export MAVEN_HOME=/opt/apache-maven
+export PATH=$PATH:$MAVEN_HOME/bin
+source /etc/profile
+
+
+Jenkins Installation
+===================
+sudo wget -O /etc/yum.repos.d/jenkins.repo \
+https://pkg.jenkins.io/redhat-stable/jenkins.repo
+
+sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key
+
+sudo dnf install jenkins -y
+
+sudo systemctl start jenkins
+sudo systemctl enable jenkins
+
+For Built Node Offline to Online
+=================================
+mount -o remount,size=4G tmpfs /tmp
+sudo systemctl restart jenkins
+
+Tomcat Installation
+===================
+Copy link from google core link
+cd /opt
+sudo wget url
+sudo tar -xvzf name
+
+Give Permissions
+sudo chown -R ec2-user:ec2-user /opt/tomcat11
+
+cd /conf/tomcat-users.xml
+
+<?xml version="1.0" encoding="utf-8"?>
+<tomcat-users>
+        <role rolename="manager-gui"/>
+        <user username="tomcat" password="tomcat" roles="manager-gui,manager-script,manager-status"/>
+</tomcat-users>
+
+vim server.xml
+add container port as 8081
+
+context.xml add this in both
+
+<?xml version="1.0" encoding="UTF-8"?>
+<Context antiResourceLocking="false" privileged="true" ignoreAnnotations="true">
+
+  <CookieProcessor className="org.apache.tomcat.util.http.Rfc6265CookieProcessor"
+                   sameSiteCookies="strict" />
+
+  <Valve className="org.apache.catalina.valves.RemoteCIDRValve"
+         allow="0.0.0.0/0,::/0" />
+
+  <Manager sessionAttributeValueClassNameFilter="java\.lang\.(?:Boolean|Integer|Long|Number|String)|org\.apache\.catalina\.filters\.CsrfPreventionFilter\$LruCache(?:\$1)?|java\.util\.(?:Linked)?HashMap"/>
+
+</Context>
+
+Add Plugins in Jenkins
+===================
+1. Maven Integration
+2. Deploy to container
+

@@ -1,0 +1,17 @@
+(A) Install Docker & Docker Compose
+sudo dnf update -y
+sudo dnf install docker -y
+sudo systemctl start docker
+sudo systemctl enable docker
+sudo usermod -aG docker ec2-user
+newgrp docker
+
+
+Docker Compose v2:
+
+sudo dnf install docker-compose-plugin -y
+docker compose version
+
+✔ (B) Give Jenkins permission to use Docker
+sudo usermod -aG docker jenkins
+sudo systemctl restart jenkins

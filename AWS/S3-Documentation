@@ -1,0 +1,60 @@
+Simple Storage Service (S3) is a secure, durable, and highly scalable object storage.
+S3 is easy to use, with a simple web services interface to store and retrieve any amount of data
+from anywhere on the web.
+
+
+Advantages:
+Features (1)
+  ++
+  Built-in for 99.99% availability for the S3 platform
+  Tiers guarantee 99.999999% durability
+  Lifecycle management
+  Versioning
+  Secure your data using ACL (Access Control List) & Bucket policies
+
+
+What is object storage:
+  +++ is an object
+  confy.json files, audio, video & images
+
+Creating bucket
+Services ----> Storage ----> S3
+Create Bucket Bucket Name - (It should be unique globally) (No uppercase) ( No uppercase contain invalid char like ' , [ # ) Check bucket name restriction in google
+bucket name - test-dsgdsgdsgds123 regions - mumbai
+Next ----> Next ----> Uncheck block public access ----> Next ----> Create bucket.
+
+Note: Buckets created are available global. Not like Ec2 machines
+        Observation: We can see global in dashboard.
+
+Create another bucket
+bucket name - demo-dsgdsgdsgds123 
+Select region as - Singapore
+
+Observe: Both the buckets are available in the dashboard.
+
+How to Upload the objects (data) in the bucket?
+click on the test bucket
+upload ---> Add files ---> select any image ---> Next ---> Manage public permissions ---> Grant public read
+Note: As bucket is public, and object is also public, anyone in the world can access the content.
+Click on the Object ---> Get Object URL
+Using Object URL, anyone can access.
+
+---
+
+Topics
+
+1. Versioning - (backup)
+2. Static website hosting
+3. classes/ tiers
+4. Cross region replication
+5. Transfer Acceleration
+6. encryption
+7. tags
+8. metadata
+9. ACL
+10. Bucket policies
+11. Life cycle management
+
+---
+
+Versioning:
