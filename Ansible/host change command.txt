@@ -1,0 +1,5 @@
+ssh -i /home/ec2-user/.ssh/farid.pem ec2-user@privateIP     # TO change host terminal from master
+install java tomcat in servers command
+ansible-playbook ansible/install_java_tomcat.yml -i ansible/inventory --private-key=/var/lib/jenkins/.ssh/farid.pem     
+
+

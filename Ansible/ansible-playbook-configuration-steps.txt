@@ -1,0 +1,27 @@
+---
+- name: Enable password login on all hosts
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Enable PasswordAuthentication
+      replace:
+        path: /etc/ssh/sshd_config
+        regexp: '^#?PasswordAuthentication\s+no'
+        replace: 'PasswordAuthentication yes'
+
+    - name: Set password for ec2-user
+      user:
+        name: ec2-user
+        password: "{{ 'YourPasswordHere' | password_hash('sha512') }}"
+
+    - name: Add ec2-user to sudoers without password
+      lineinfile:
+        path: /etc/sudoers
+        line: "ec2-user ALL=NOPASSWD: ALL"
+        validate: "visudo -cf %s"
+
+    - name: Restart SSHD
+      service:
+        name: sshd
+        state: restarted

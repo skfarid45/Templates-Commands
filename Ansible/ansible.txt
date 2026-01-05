@@ -1,0 +1,187 @@
+install ansible core 
+# sudo dnf install -y ansible-core
+
+ STEP 1 — CREATE ANSIBLE INVENTORY FILE
+ On Ansible Control Machine (ACM / Master)
+
+Open the Ansible inventory file:
+
+sudo vim /etc/ansible/hosts
+
+
+If the file does NOT exist (Amazon Linux 2023), then create it:
+
+sudo mkdir -p /etc/ansible
+sudo vim /etc/ansible/hosts
+
+✔ Scroll down and add:
+[webservers]
+172.31.39.169
+
+
+(Replace 172.31.39.169 with your Host/Slave’s private IP.)
+
+Save & Exit:
+
+:wq!
+
+✅ STEP 2 — OPEN SSH CONNECTION SETUP
+✔ Switch to ec2-user (very important)
+sudo su - ec2-user
+
+✅ STEP 3 — Generate SSH Key Pair
+ssh-keygen
+
+
+Press Enter → Enter → Enter
+(Default location: ~/.ssh/id_rsa)
+
+Your key pair is created.
+
+✅ STEP 4 — COPY PUBLIC KEY TO HOST/SLAVE
+
+Use the command:
+
+ssh-copy-id ec2-user@<PRIVATE-IP-HOST>
+
+
+Example for your IP:
+
+ssh-copy-id ec2-user@172.31.39.169
+
+✔ It will ask:
+Are you sure you want to continue connecting (yes/no)?
+
+
+Type:
+
+yes
+
+
+If password is required, enter the host machine password (only if no key yet).
+
+This installs your public key into:
+
+~/.ssh/authorized_keys
+
+✅ STEP 5 — TEST SSH CONNECTION FROM ACM → HOST
+
+After ssh-copy-id prints a message, it also shows the command to log in.
+
+Run:
+
+ssh ec2-user@172.31.39.169
+
+
+If login works automatically WITHOUT password, SSH setup is successful.
+
+To go back to the Control Node:
+exit
+
+🎉 Now your ACM can run Ansible commands on the host
+
+Test:
+
+ansible all -m ping
+
+
+OR only webservers:
+
+ansible webservers -m ping
+
+
+You should get:
+
+172.31.39.169 | SUCCESS => { ... }
+
+⭐ Summary (Copy-Paste Version)
+sudo su - ec2-user
+ssh-keygen    (ENTER, ENTER, ENTER)
+ssh-copy-id ec2-user@<private-ip-host>
+
+sudo vim /etc/ansible/hosts
+[webservers]
+<private-ip-host>
+:wq!
+
+ansible webservers -m ping
+
+
+
+Playbook 
+====================
+
+✅ 1. Understand What This Playbook Just Did
+
+Your playbook:
+
+✔ Installed Tomcat
+✔ Started the Tomcat service
+✔ Downloaded & deployed a sample .war file
+✔ Restarted Tomcat only if the WAR was newly downloaded (because of handler)
+
+So now, Tomcat is running with a deployed sample application.
+
+
+---
+
+✅ 2. Check if Tomcat is Running
+
+On master, run (Ad-hoc Ansible command):
+
+ansible webservers -a "systemctl status tomcat"
+
+Or log in to slave and check:
+
+sudo systemctl status tomcat
+
+You should see active (running).
+
+
+---
+
+✅ 3. Access the Tomcat Web Application
+
+Open your browser:
+
+http://<SLAVE_PUBLIC_IP>:8080/sample
+
+or if your EC2 is using Tomcat 9 path:
+
+http://<SLAVE_PUBLIC_IP>:8080/sample/
+
+✔ You should see the Sample Tomcat Application running.
+
+If port 8080 is not open → open it in AWS:
+
+👉 EC2 → Security Groups → Inbound → Add Rule:
+Type: Custom TCP
+Port: 8080
+Source: 0.0.0.0/0 (testing only)
+
+
+---
+
+✅ 4. Verify WAR Deployment
+
+SSH into the slave:
+
+ls /usr/share/tomcat/webapps
+
+You should see:
+
+sample.war
+sample/
+
+The sample/ folder appears only after Tomcat extracts the WAR.
+
+
+---
+
+✅ 5. Verify Handler Worked
+
+Check Tomcat restart timestamp:
+
+sudo systemctl status tomcat
+
+If the war file changed during playbook → restart time updates.
